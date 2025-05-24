@@ -1,45 +1,27 @@
-Micro-Book-Stack
-🚀 Scalable Microservice Architecture for Books, Genres, and Images
-
+Micro-Book-Stack 🚀 Full-Stack Microservice Architecture for Books, Genres, and Images
 Overview
-Micro-Book-Stack is a modular, scalable microservice system designed for book management, featuring genre classification, optional image attachments, and secure access control. Built using Spring MVC and Play Framework, it ensures secure authentication, efficient CRUD operations, and inter-service communication via NATS message broker, REST Template, and WebSocket Client.
+Micro-Book-Stack is a modular, scalable full-stack system for book management, offering genre classification, optional image attachments, and secure access control. It combines backend microservices (Spring MVC, Play Framework) with a modern Angular frontend, ensuring a seamless user experience. The system provides secure authentication, efficient CRUD operations, and inter-service communication via NATS message broker and REST Template.
 
-The system consists of five independent microservices, supporting high-performance operations.
-
-📌 Default ports are customizable based on your setup.
+📌 Fully integrated backend and frontend for an intuitive user experience! 📌 Default ports can be customized based on your setup.
 
 Architecture
-🔹 5 Microservices:
+🔹 Full-Stack: Backend + Angular Frontend 🔹 5 Backend Microservices: 📖 Book-Service (Play Framework) → Manages book CRUD operations 📷 Image-Service (Play Framework) → Manages book images 🎭 Genre-Service (Play Framework) → Handles genre classification 🔐 Auth-Service (Spring MVC) → Manages user authentication & roles ⚙ Gateway-Service (Spring MVC) → Entry point, request routing (Default port: 8082)
 
-📖 Book-Service (Play Framework) → Handles book CRUD operations
+🔹 Angular Frontend → Responsive and dynamic UI for smooth user interaction
 
-📷 Image-Service (Play Framework) → Manages book images
+🔹 Inter-Service Communication: ✅ NATS Message Broker → Event-based asynchronous messaging ✅ REST Template → Synchronous HTTP requests between services
 
-🎭 Genre-Service (Play Framework) → Manages genre classification
+🔹 Security Features: ✅ Spring Security & JWT → Secure authentication and authorization ✅ Consul → Service discovery and health monitoring ✅ Optimized PostgreSQL database management with Hibernate ORM
 
-🔐 Auth-Service (Spring MVC) → Manages user authentication & roles
-
-⚙ Gateway-Service (Spring MVC) → Entry point, request routing (Default port: 8082)
-
-🔹 Communication Methods:
-
-NATS Message Broker → Event-based async messaging
-
-REST Template → Synchronous HTTP requests between services
-
-WebSocket Client → Real-time updates
-
-🔹 Secure access control using Spring Security & JWT 🔹 Consul for service discovery and health checks 🔹 Optimized PostgreSQL database management with Hibernate ORM
-
-📌 Note: Default ports can be changed based on your setup.
+📌 Note: Default ports can be adjusted according to your infrastructure.
 
 Tech Stack
-✅ Java – Core language for all services ✅ Spring MVC – Used for Gateway-Service & Auth-Service ✅ Play Framework – Used for Book-Service, Image-Service & Genre-Service ✅ Spring Security – Role-based access management ✅ JWT – JSON Web Tokens for authentication ✅ Hibernate – ORM for database interaction ✅ PostgreSQL – Relational database for persistent storage ✅ NATS – Message broker for async communication ✅ REST Template – Synchronous HTTP communication ✅ WebSocket Client – Real-time event handling ✅ Consul – Service discovery & health monitoring
+✅ Java – Core language for all backend services ✅ Spring MVC – Used in Gateway-Service & Auth-Service ✅ Play Framework – Backend for Book-Service, Image-Service & Genre-Service ✅ Angular – Powerful frontend for seamless user interaction ✅ TypeScript – Strongly typed programming for the frontend ✅ Spring Security – Role-based access control ✅ JWT – JSON Web Tokens for authentication ✅ Hibernate – ORM for efficient database interaction ✅ PostgreSQL – Relational database for persistent storage ✅ NATS – Message broker for asynchronous service communication ✅ REST Template – Synchronous HTTP communication between microservices ✅ Consul – Automatic service discovery and health checks
 
 Features
-✔ Complete book management system – CRUD operations for books, genres, and images ✔ Asynchronous processing – Events published via NATS message broker ✔ Synchronous service calls – Using REST Template for inter-service communication ✔ WebSocket Client integration – For real-time updates ✔ Secure authentication & authorization – Managed via Spring Security & JWT ✔ Microservices scalability – Designed for efficient service communication ✔ Consul integration – For automatic service discovery and health checks
+✔ Full-Stack Integration – Complete system with backend microservices and a frontend application ✔ Modular Backend Architecture – Independent microservices for books, images, and genres ✔ Secure Authentication & Authorization – Managed via Spring Security & JWT ✔ Asynchronous Processing – Events published via NATS message broker ✔ Synchronous Service Calls – REST Template for direct inter-service communication ✔ Microservices Scalability – Designed for efficient service interaction ✔ Automated Service Discovery – Consul ensures reliable service health monitoring
 
 Contact & Contributions
-🚀 Micro-Book-Stack Team 💡 Built with ❤️ by passionate developers!
+🚀 Micro-Book-Stack – Developed with dedication and expertise!
 
 📌 For questions or collaboration, contact: ✉ Milan Radovanović → philip_rivers85@yahoo.com
