@@ -1,0 +1,37 @@
+.table th, 
+.table td {
+    text-align: center; /* Centriranje teksta */
+    vertical-align: middle; /* Centriranje u odnosu na visinu reda */
+}
+
+.pagination {
+    display: flex;
+    justify-content: flex-end; /* Pomeranje na desnu stranu */
+    align-items: center; /* Vertikalno poravnanje */
+    gap: 10px; /* Razmak između elemenata */
+    margin-top: 20px; /* Malo prostora iznad paginacije */
+}
+
+.pagination button {
+    background-color: #800020; /* Bordo dugmad */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.pagination button:disabled {
+    background-color: #ccc; /* Siva boja kada je dugme disable */
+    cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: #590015; /* Tamnija nijansa pri hover-u */
+}
+
+.pagination span {
+    font-weight: bold;
+}
+

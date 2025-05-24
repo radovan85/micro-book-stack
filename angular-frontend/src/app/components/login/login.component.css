@@ -1,0 +1,22 @@
+body {
+    background-color: #ece9e9; /* Svetla pozadina */
+    font-family: 'Oswald', serif; /* Podrazumevani font */
+}
+
+.login-card {
+    width: 400px;
+    border-radius: 12px;
+    background-color: #f8f9fa;
+}
+
+.login-card h2 {
+    color: #800020; /* Bordo - Trula višnja */
+}
+
+.login-card .form-control {
+    border-radius: 8px;
+}
+
+.login-card button {
+    border-radius: 8px;
+}

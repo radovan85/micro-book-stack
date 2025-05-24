@@ -1,0 +1,12 @@
+.card {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+}
+
+.card h1 {
+    color: #800020; /* Bordo - Trula višnja */
+}
+
+.card p {
+    font-size: 1.2rem;
+}
