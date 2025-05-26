@@ -1,0 +1,14 @@
+# Routes
+
+
+#books
+GET    /api/books     com.radovan.play.controllers.BookController.getAllBooks
+GET    /api/books/:id     com.radovan.play.controllers.BookController.getBookDetails(id:Integer)
+GET    /api/books/selectedBooks/:id     com.radovan.play.controllers.BookController.getAllBooksByGenre(id:Integer)
+POST   /api/books       com.radovan.play.controllers.BookController.createBook(request:Request)
+PUT    /api/books/:id   com.radovan.play.controllers.BookController.updateBook(request:Request,id:Integer)
+DELETE  /api/books/:id  com.radovan.play.controllers.BookController.deleteBook(id:Integer)
+DELETE  /api/books/deleteBooks/:id  com.radovan.play.controllers.BookController.deleteBooks(request:Request,id:Integer)
+
+#Health
+GET     /api/health     com.radovan.play.controllers.HealthController.healthCheck(request:Request)

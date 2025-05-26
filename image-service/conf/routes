@@ -1,0 +1,8 @@
+# Routes
+
+#images
+GET    /api/images   com.radovan.play.controllers.BookImageController.getAllImages
+POST   /api/images/:bookId   com.radovan.play.controllers.BookImageController.storeImage(request:Request,bookId:Integer)
+
+#Health
+GET     /api/health     com.radovan.play.controllers.HealthController.healthCheck(request:Request)
