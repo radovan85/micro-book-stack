@@ -1,0 +1,13 @@
+.navbar-custom {
+    background-color: #800020; /* Bordo - Trula višnja */
+}
+
+.navbar-custom .navbar-nav .nav-link {
+    color: white;
+    text-decoration: none;
+}
+
+.navbar-custom .navbar-nav .nav-link:hover {
+    color: #ffcccc; /* Svetlija nijansa prilikom hover-a */
+    cursor: pointer; /* Pokazivač se menja u 'pointer' */
+}

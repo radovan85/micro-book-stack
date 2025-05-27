@@ -1,0 +1,222 @@
+version: "3.8"
+
+networks:
+  book-network:
+    driver: bridge
+  monitoring:
+    driver: bridge
+
+services:
+  consul:
+    image: hashicorp/consul:1.20.5
+    ports:
+      - "8500:8500"
+    command: "agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0"
+    networks:
+      - book-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8500/v1/status/leader || exit 1"]
+      interval: 10s
+      timeout: 5s
+    restart: always
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "1111"
+      POSTGRES_DB: book-db
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - book-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d book-db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  nats:
+    image: nats:latest
+    ports:
+      - "4222:4222"
+    networks:
+      - book-network
+    restart: unless-stopped
+
+  api-gateway:
+    build:
+      context: ./backend/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_PORT=8500
+      - SPRING_APPLICATION_NAME=api-gateway
+    networks:
+      - book-network
+    depends_on:
+      consul:
+        condition: service_healthy
+    restart: unless-stopped
+
+  auth-service:
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/book-db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=1111
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_PORT=8500
+      - SPRING_APPLICATION_NAME=auth-service
+    networks:
+      - book-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+    restart: unless-stopped
+
+  genre-service:
+    build:
+      context: ./backend/genre-service
+      dockerfile: Dockerfile
+    ports:
+      - "9002:9000"
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/book-db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=1111
+      - NATS_URL=nats://nats:4222
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - SERVICE_NAME=genre-service
+      - PLAY_SECRET=uyhbhIFj7:LHYN=NcNA6;=>[GSxnf:`p6tXNy6dOASy4RxUsMBLv;P/NV=XPMZxy
+      - PLAY_SERVER_HTTP_PORT=9000
+    networks:
+      - book-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      consul:
+        condition: service_healthy
+    restart: unless-stopped
+
+  book-service:
+    build:
+      context: ./backend/book-service
+      dockerfile: Dockerfile
+    ports:
+      - "9001:9000"
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/book-db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=1111
+      - NATS_URL=nats://nats:4222
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - SERVICE_NAME=book-service
+      - PLAY_SECRET=?n1;;wym_n`LN3Rt^YGiu5Nq>r;I0cJ:l3TN_jS2zNwlt?mdwo>d6NYgy:YA8]P[
+      - PLAY_SERVER_HTTP_PORT=9000
+    networks:
+      - book-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      consul:
+        condition: service_healthy
+    restart: unless-stopped
+
+  image-service:
+    build:
+      context: ./backend/image-service
+      dockerfile: Dockerfile
+    ports:
+      - "9003:9000"
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/book-db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=1111
+      - NATS_URL=nats://nats:4222
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - SERVICE_NAME=image-service
+      - PLAY_SECRET=fmEtNSsGvfR0MSER80Fh`p8zBXL]n9?8`]ZLl3vlC/2lhRvp5:`Gz>fTb=uh=GLH
+      - PLAY_SERVER_HTTP_PORT=9000
+    networks:
+      - book-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      consul:
+        condition: service_healthy
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    networks:
+      - book-network
+      - monitoring
+    depends_on:
+      - api-gateway
+      - auth-service
+      - genre-service
+      - book-service
+      - image-service
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"
+    networks:
+      - book-network
+      - monitoring
+    depends_on:
+      - prometheus
+
+  angular-frontend:
+    build:
+      context: ./angular-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    networks:
+      - book-network
+    depends_on:
+      - api-gateway
+      - auth-service
+      - genre-service
+      - book-service
+      - image-service
+
+volumes:
+  pg_data:
+  grafana-storage:

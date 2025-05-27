@@ -1,0 +1,37 @@
+<div class="form-container">
+    <h2 class="text-center">Update Book</h2>
+    <form id="bookForm">
+        <div class="mb-3">
+            <label for="title" class="form-label">Book Title</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Enter book title" [value]="getBook().title">
+            <small class="text-danger validationError" id="titleError">Title must be between 3 and 75 characters.</small>
+        </div>
+        <div class="mb-3">
+            <label for="author" class="form-label">Author</label>
+            <input type="text" class="form-control" id="author" name="author" placeholder="Enter author's name" [value]="getBook().author">
+            <small class="text-danger validationError" id="authorError">Author name must be between 3 and 50 characters.</small>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter book description" [value]="getBook().description"></textarea>
+            <small class="text-danger validationError" id="descriptionError">Description must be between 3 and 100 characters.</small>
+        </div>
+        <div class="mb-3">
+            <label for="genre" class="form-label">Genre</label>
+            <select class="form-select" id="genreId" name="genreId">
+                <option value="" selected disabled>Select a genre</option>
+                <ng-template ngFor let-genre [ngForOf]="getAllGenres()">
+                    <option [value]="genre.genreId" [innerHTML]="genre.name" [selected]="getBook().genreId === genre.genreId"></option>
+                </ng-template>
+            </select>
+            <small class="text-danger validationError" id="genreError">Please select a genre.</small>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="text" class="form-control" id="price" name="price" (keydown)="validateNumber($event)" placeholder="Enter price" [value]="getBook().price">
+            <small class="text-danger validationError" id="priceError">Price must be a valid number.</small>
+        </div>
+        <button type="submit" class="btn btn-custom">Update Book</button>
+    </form>
+</div>
+

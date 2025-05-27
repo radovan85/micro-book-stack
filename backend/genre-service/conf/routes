@@ -1,0 +1,11 @@
+# Routes
+
+#Genres
+GET   /api/genres    com.radovan.play.controllers.BookGenreController.getAllGenres
+GET   /api/genres/:id    com.radovan.play.controllers.BookGenreController.getGenreDetails(id:Integer)
+POST   /api/genres    com.radovan.play.controllers.BookGenreController.createGenre(request:Request)
+PUT   /api/genres/:id    com.radovan.play.controllers.BookGenreController.updateGenre(request:Request,id:Integer)
+DELETE   /api/genres/:id    com.radovan.play.controllers.BookGenreController.deleteGenre(request:Request,id:Integer)
+
+#Health
+GET     /api/health     com.radovan.play.controllers.HealthController.healthCheck(request:Request)

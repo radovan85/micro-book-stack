@@ -1,0 +1,69 @@
+package com.radovan.spring.services.impl;
+
+import com.radovan.spring.services.ConsulRegistrationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+public class ConsulRegistrationServiceImpl implements ConsulRegistrationService {
+
+    // Promenjeno sa localhost na ime servisa iz docker-compose.yml
+    private static final String CONSUL_REGISTRY_URL = "http://consul:8500/v1/agent/service/register";
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Override
+    @Scheduled(fixedRate = 30000L)
+    public void registerService() {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            String hostname = InetAddress.getLocalHost().getHostName();
+            String ipAddr = "api-gateway"; // Koristimo service name umesto IP
+            
+            String appName = "api-gateway";
+            int port = 8080; // Unutrašnji port kontejnera (NE spoljni 8082)
+
+            Map<String, Object> registrationData = new HashMap<>();
+            registrationData.put("Name", appName);
+            registrationData.put("ID", appName + "-" + port);
+            registrationData.put("Address", ipAddr);
+            registrationData.put("Port", port);
+
+            // Health check mora koristiti unutrašnju Docker mrežu
+            Map<String, Object> checkData = new HashMap<>();
+            checkData.put("HTTP", "http://api-gateway:8080/api/health");
+            checkData.put("Interval", "10s");
+            checkData.put("Timeout", "5s");
+            checkData.put("DeregisterCriticalServiceAfter", "1m");
+
+            registrationData.put("Check", checkData);
+
+            JsonNode jsonPayload = objectMapper.valueToTree(registrationData);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<JsonNode> requestEntity = new HttpEntity<>(jsonPayload, headers);
+            restTemplate.put(CONSUL_REGISTRY_URL, requestEntity);
+
+            System.out.println("Service registered successfully with Consul!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to register service with Consul", e);
+        }
+    }
+}

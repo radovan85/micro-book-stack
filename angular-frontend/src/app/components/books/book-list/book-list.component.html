@@ -1,0 +1,59 @@
+<div class="container mt-4">
+    <h2 class="text-center">Books</h2>
+
+    <ng-container *ngIf="hasAuthorityAdmin()">
+        <button class="btn btn-primary mb-3" routerLink="/books/addBook">Add Book</button>
+    </ng-container>
+
+    <table class="table table-bordered book-table">
+        <thead class="table-dark">
+            <tr>
+                <th>Preview</th>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-template ngFor let-tempBook [ngForOf]="getPaginatedBooks()">
+            <tr>
+                <td>
+                    <img [src]="getBookImage(tempBook)" alt="Book Image" class="preview-img">
+                </td>
+                <td>{{ tempBook.bookId }}</td>
+                <td>{{ tempBook.title }}</td>
+                <td>{{ getGenre(tempBook).name }}</td>
+                <td>€&#160;{{ tempBook.price | number:'1.2-2' }}</td>
+
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                    [routerLink]="[`/books/bookDetails/`, tempBook.bookId]">Details</a>
+                            </li>
+                            <ng-container *ngIf="hasAuthorityAdmin()">
+                                <li><a class="dropdown-item"
+                                        [routerLink]="[`/books/updateBook/`, tempBook.bookId]">Update</a>
+                                </li>
+                                <li><button class="dropdown-item text-danger" (click)="deleteBook(tempBook.bookId)">Delete</button></li>
+                            </ng-container>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        </tbody>
+    </table>
+
+    <div class="pagination" *ngIf="getBookList().length > 0">
+        <button (click)="prevPage()" [disabled]="getCurrentPage() == 1">Previous</button>
+        <span>Page {{ getCurrentPage() }} of {{ getTotalPages() }}</span>
+        <button (click)="nextPage()" [disabled]="getCurrentPage() == getTotalPages()">Next</button>
+    </div>
+</div>

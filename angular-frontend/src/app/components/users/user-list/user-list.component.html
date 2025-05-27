@@ -1,0 +1,51 @@
+<div class="container mt-4">
+    <h2 class="text-center">Users</h2>
+
+    <table class="table table-bordered user-table mt-4">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Enabled</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let tempUser of getPaginatedUsers()">
+                <td>{{ tempUser.id }}</td>
+                <td>{{ tempUser.firstName }} {{ tempUser.lastName }}</td>
+                <td>{{ tempUser.email }}</td>
+                <td>
+                    <span [class.enabled]="tempUser.enabled == 1" [class.disabled]="tempUser.enabled == 0">
+                        {{ tempUser.enabled == 1 ? 'Yes' : 'No' }}
+                    </span>
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu">
+                            <ng-container *ngIf="tempUser.enabled == 1">
+                                <li><a class="dropdown-item" (click)="suspendUser(tempUser.id)">Suspend</a></li>
+                            </ng-container>
+                            <ng-container *ngIf="tempUser.enabled == 0">
+                                <li><a class="dropdown-item" (click)="reactivateUser(tempUser.id)">Reactivate</a></li>
+                            </ng-container>
+                            <li><button class="dropdown-item text-danger" (click)="deleteUser(tempUser.id)">Delete</button></li>
+                        </ul>
+                    </div>
+                </td>
+                
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination" *ngIf="getUserList().length > 0">
+        <button (click)="prevPage()" [disabled]="getCurrentPage() == 1">Previous</button>
+        <span>Page {{ getCurrentPage() }} of {{ getTotalPages() }}</span>
+        <button (click)="nextPage()" [disabled]="getCurrentPage() == getTotalPages()">Next</button>
+    </div>
+</div>

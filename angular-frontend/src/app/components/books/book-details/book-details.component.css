@@ -1,0 +1,22 @@
+.preview-img {
+    width: 100px; /* Povećana slika */
+    height: auto;
+    border-radius: 5px;
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center; /* Centrirane dugmad */
+    margin-top: 20px;
+}
+
+.table th, 
+.table td {
+    text-align: center; /* Centriranje teksta */
+    vertical-align: middle; /* Centriranje u odnosu na visinu reda */
+}
+
+.container {
+    margin-bottom: 100px;
+}

@@ -1,0 +1,41 @@
+<div class="container mt-4">
+    <h2 class="text-center">Genres</h2>
+    <ng-template [ngIf]="hasAuthorityAdmin()">
+        <button class="btn btn-primary mb-3" routerLink="/genres/addGenre">Add Genre</button>
+    </ng-template>
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <ng-template [ngIf]="hasAuthorityAdmin()">
+                    <th>Actions</th>
+                </ng-template>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-template ngFor let-tempGenre [ngForOf]="getPaginatedGenres()">
+                <tr>
+                    <td [innerHTML]="tempGenre.genreId">1</td>
+                    <td [innerHTML]="tempGenre.name"></td>
+                    <td [innerHTML]="tempGenre.description"></td>
+                    <ng-template [ngIf]="hasAuthorityAdmin()">
+                        <td>
+                            <button class="btn btn-warning btn-sm me-2" [routerLink]="[`/genres/updateGenre/`, tempGenre.genreId]">Update</button>
+                            <button class="btn btn-danger btn-sm"
+                                (click)="deleteGenre(tempGenre.genreId)">Delete</button>
+                        </td>
+                    </ng-template>
+                </tr>
+            </ng-template>
+        </tbody>
+    </table>
+
+    <div class="pagination" *ngIf="getGenreList().length > 0">
+        <button (click)="prevPage()" [disabled]="getCurrentPage() == 1">Previous</button>
+        <span>Page {{ getCurrentPage() }} of {{ getTotalPages() }}</span>
+        <button (click)="nextPage()" [disabled]="getCurrentPage() == getTotalPages()">Next</button>
+    </div>
+</div>
